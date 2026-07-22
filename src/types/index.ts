@@ -149,6 +149,20 @@ export interface Page<T> {
   };
 }
 
+/** Body of POST/PUT /addresses. */
+export interface AddressRequest {
+  city: string;
+  district: string;
+  fullAddress: string;
+  /** Exactly 5 digits. */
+  postalCode: string;
+}
+
+/** Response of GET/POST/PUT /addresses (200). One address per user. */
+export interface Address extends AddressRequest {
+  id: number;
+}
+
 /** Standard backend error body. Messages are already in Turkish. */
 export interface ApiErrorResponse {
   error: string;

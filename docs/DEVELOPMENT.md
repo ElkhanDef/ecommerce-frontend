@@ -51,7 +51,7 @@ src/
     product/            # ProductCard, ProductGrid, ProductGallery, FavoriteButton, AddToCartButton
     favorites/          # FavoritesList (auth guard + favori grid'i)
     cart/               # CartView (auth guard + özet), CartItemRow (adet/sil)
-  services/             # api.ts, auth.ts, users.ts, products.ts, favorites.ts, cart.ts, token-storage.ts
+  services/             # api.ts, auth.ts, users.ts, products.ts, favorites.ts, cart.ts, addresses.ts, token-storage.ts
   stores/               # Zustand store'ları: favorites.ts, cart.ts
   types/                # Paylaşılan TypeScript tipleri / DTO'lar
   lib/                  # Yardımcı fonksiyonlar — henüz boş
@@ -98,6 +98,9 @@ docs/                   # Proje dokümantasyonu + tasarım referansı
 - `GET /cart` → 200 `{userId, message (null olabilir), totalQuantity, totalPrice, cartItems: [{productId, productName, unitPrice, quantity, mainImageUrl, totalPrice}]}` (Bearer gerekli) — `cartItems`'da `slug` YOK, satırlar ürün detayına linklenemiyor.
 - `POST /cart/items/{productId}?quantity=` / `PATCH /cart/items/{productId}?quantity=` / `DELETE /cart/items/{productId}` → 200, hepsi güncel sepetin tamamını (`CartResponseDto`) döndürür; `{id}` **ürün id'sidir** (sepet satırının ayrı id'si yok). PATCH mutlak adet alır (delta değil). `DELETE /cart` sepeti boşaltır, gövdesiz 200 döner.
 - Hata formatı (tüm endpoint'ler): `{error, message, path, status, timestamp, validationErrors}` — `message` ve `validationErrors` (alan → mesaj) **backend'den Türkçe gelir**, UI'da doğrudan gösterilir.
+- `GET /addresses` → 200 `{id, city, district, fullAddress, postalCode}` (Bearer gerekli) — **kullanıcı başına tek adres**, `{id}` path parametresi YOK. Adres yoksa hata döner (spec'te belgelenmemiş; frontend her hatayı "adres yok" kabul edip ekleme formunu gösterir).
+- `POST /addresses` / `PUT /addresses` → body `AddressRequestDto {city, district, fullAddress (max 500), postalCode (tam 5 karakter)}`, hepsi zorunlu, 200 `AddressResponseDto` döner.
+- `DELETE /addresses` → 200, gövdesiz.
 
 ## Mimari Kararlar
 
@@ -123,6 +126,7 @@ Lüks butik hissiyatı; sıcak, zarif, sade. Mobil öncelikli. Referans mockup: 
 
 ## Changelog
 
+- **2026-07-22** — Adres yönetimi bağlandı: backend'de kullanıcı başına tek adres modeli (`GET/POST/PUT/DELETE /addresses`, id parametresiz, OpenAPI `/v3/api-docs` ile doğrulandı). `services/addresses.ts`, `Address`/`AddressRequest` tipleri, `components/profile/AddressDetails.tsx` (görüntüle/düzenle/sil + boş durumda ekleme formu, `window.confirm`'lü silme) ve genel amaçlı `ui/TextAreaField.tsx` eklendi. `/profil` sayfası iki sütuna bölündü: solda hesap bilgileri, sağda adresim.
 - **2026-07-20** — Kategoriler dinamik bağlandı: header menüsü `GET /categories`'ten render ediliyor (satıcı ne eklerse otomatik görünür, slug'sız eski kayıtlar atlanır, backend'e ulaşılamazsa menü yerleşik linklere düşer), `/kategori/[slug]` sayfası (`GET /categories/{slug}` ile başlık + 404, `GET /products?categorySlug=` ile grid + sayfalama), `services/categories.ts`, `ProductCategory` tipi `Category` olarak genelleştirildi, `ProductSummary`'ye opsiyonel `categorySlug` eklendi. Bilinen eksik: backend `categorySlug` filtresini henüz uygulamıyor.
 - **2026-07-19** — Backend `thumbnailPath`'i tam URL (yoksa null) dönecek şekilde düzeltildi → galeri şeridindeki küçük görseller artık `thumbnailPath ?? url` ile çiziliyor.
 - **2026-07-19** — Sepet bağlandı: `stores/cart.ts` + `services/cart.ts` (her mutasyon tam sepeti döndürdüğü için optimistic state yok, sunucu yanıtı doğrudan yazılır), `/sepet` sayfası (auth guard, satır bazlı adet artır/azalt + silme, sipariş özeti, onaylı "Sepeti Temizle", boş durum), ürün detayına adet seçicili "Sepete Ekle" (stok 0 → Tükendi), header sepet ikonuna ürün adedi rozeti (`HeaderCartLink` — soft navigation sonrası da güncellenir). Ödeme/checkout backend'de sipariş endpoint'i olmadığı için yok.

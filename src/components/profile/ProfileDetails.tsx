@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/services/users";
 import { signOut } from "@/services/auth";
 import { ApiError } from "@/services/api";
 import { getAccessToken } from "@/services/token-storage";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import type { CurrentUser } from "@/types";
 
 const LOGIN_REDIRECT = "/giris?redirect=/profil";
@@ -14,6 +15,7 @@ export default function ProfileDetails() {
   const router = useRouter();
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -36,7 +38,8 @@ export default function ProfileDetails() {
       });
   }, [router]);
 
-  function handleSignOut() {
+  function handleSignOutConfirmed() {
+    setConfirmSignOut(false);
     signOut();
     // Full navigation so auth-dependent UI (header button) resets.
     // TODO: Replace with the Zustand auth store when it lands.
@@ -67,7 +70,7 @@ export default function ProfileDetails() {
   ];
 
   return (
-    <div className="max-w-lg">
+    <div>
       <div className="bg-white border border-[#e0e0e0] rounded-[16px] p-6 mb-6">
         <dl className="space-y-4">
           {fields.map((field) => (
@@ -95,11 +98,21 @@ export default function ProfileDetails() {
 
       <button
         type="button"
-        onClick={handleSignOut}
+        onClick={() => setConfirmSignOut(true)}
         className="px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-colors"
       >
         Çıkış Yap
       </button>
+
+      <ConfirmDialog
+        open={confirmSignOut}
+        title="Çıkış Yap"
+        message="Çıkış yapmak istediğinizden emin misiniz?"
+        confirmLabel="Çıkış Yap"
+        destructive
+        onConfirm={handleSignOutConfirmed}
+        onCancel={() => setConfirmSignOut(false)}
+      />
     </div>
   );
 }
