@@ -33,6 +33,10 @@ export default function VerifyAccount({ token }: { token: string }) {
   if (status === "verifying") {
     return (
       <div role="status" className="text-center">
+        <span
+          className="inline-block w-8 h-8 mb-4 rounded-full border-2 border-gold-light border-t-gold-dark animate-spin"
+          aria-hidden="true"
+        />
         <p className="font-serif text-[22px] font-semibold text-gray-800 mb-2">
           Hesabınız doğrulanıyor...
         </p>
@@ -55,13 +59,13 @@ export default function VerifyAccount({ token }: { token: string }) {
         <div className="flex justify-center gap-3">
           <Link
             href="/kayit"
-            className="px-5 py-2.5 border border-gray-300 hover:bg-surface rounded-xl text-[14px] font-medium text-gray-700 transition-colors"
+            className="px-5 py-2.5 border border-gray-300 hover:bg-surface rounded-xl text-[14px] font-medium text-gray-700 transition-all active:scale-[0.98]"
           >
             Kayıt Ol
           </Link>
           <Link
             href="/giris"
-            className="px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+            className="px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
           >
             Giriş Yap
           </Link>
@@ -72,15 +76,16 @@ export default function VerifyAccount({ token }: { token: string }) {
 
   return (
     <div role="status" className="text-center">
+      <p aria-hidden="true" className="text-5xl mb-4">🎉</p>
       <p className="font-serif text-[22px] font-semibold text-gray-800 mb-2">
-        Hesabınız doğrulandı 🎉
+        Hesabınız doğrulandı
       </p>
       <p className="text-[14px] text-gray-600 mb-5">
         Artık giriş yapıp alışverişe başlayabilirsiniz.
       </p>
       <Link
         href="/giris"
-        className="inline-block px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+        className="inline-block px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
       >
         Giriş Yap
       </Link>

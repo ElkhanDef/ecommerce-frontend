@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CartItemRow from "./CartItemRow";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { formatPrice } from "@/lib/format";
 import { ApiError } from "@/services/api";
 import { getAccessToken } from "@/services/token-storage";
@@ -18,6 +19,7 @@ export default function CartView() {
   const error = useCartStore((state) => state.error);
   const [clearing, setClearing] = useState(false);
   const [clearError, setClearError] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -35,10 +37,8 @@ export default function CartView() {
       });
   }, [router]);
 
-  async function handleClear() {
-    if (!window.confirm("Sepetteki tüm ürünler silinecek. Emin misiniz?")) {
-      return;
-    }
+  async function handleClearConfirmed() {
+    setConfirmClear(false);
     setClearing(true);
     setClearError(null);
     try {
@@ -68,19 +68,21 @@ export default function CartView() {
 
   if (cart === null) {
     return (
-      <p role="status" className="py-12 text-center text-[14px] text-gray-500">
+      <div role="status" className="py-16 flex flex-col items-center gap-3 text-[14px] text-gray-500">
+        <span className="w-6 h-6 rounded-full border-2 border-gold-light border-t-gold-dark animate-spin" aria-hidden="true" />
         Sepetiniz yükleniyor...
-      </p>
+      </div>
     );
   }
 
   if (cart.cartItems.length === 0) {
     return (
       <div className="py-12 text-center">
+        <p aria-hidden="true" className="text-5xl mb-4">🛒</p>
         <p className="text-[15px] text-gray-500 mb-4">Sepetiniz boş.</p>
         <Link
           href="/"
-          className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+          className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
         >
           Ürünleri Keşfet
         </Link>
@@ -90,7 +92,7 @@ export default function CartView() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
-      <ul className="bg-white border border-[#e0e0e0] rounded-[16px] px-5">
+      <ul className="bg-white border border-[#e0e0e0] rounded-[16px] px-5 shadow-sm">
         {cart.cartItems.map((item) => (
           <CartItemRow key={item.productId} item={item} />
         ))}
@@ -98,7 +100,7 @@ export default function CartView() {
 
       <aside
         aria-label="Sipariş özeti"
-        className="bg-white border border-[#e0e0e0] rounded-[16px] p-5 lg:sticky lg:top-32"
+        className="bg-white border border-[#e0e0e0] rounded-[16px] p-5 shadow-sm lg:sticky lg:top-32"
       >
         <h2 className="font-serif text-[18px] font-semibold text-gray-800 mb-4">
           Sipariş Özeti
@@ -120,9 +122,9 @@ export default function CartView() {
 
         <button
           type="button"
-          onClick={handleClear}
+          onClick={() => setConfirmClear(true)}
           disabled={clearing}
-          className="mt-5 w-full px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-colors disabled:opacity-60"
+          className="mt-5 w-full px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98] disabled:opacity-60"
         >
           {clearing ? "Temizleniyor..." : "Sepeti Temizle"}
         </button>
@@ -132,6 +134,16 @@ export default function CartView() {
           </p>
         )}
       </aside>
+
+      <ConfirmDialog
+        open={confirmClear}
+        title="Sepeti Temizle"
+        message="Sepetteki tüm ürünler silinecek. Emin misiniz?"
+        confirmLabel="Sepeti Temizle"
+        destructive
+        onConfirm={handleClearConfirmed}
+        onCancel={() => setConfirmClear(false)}
+      />
     </div>
   );
 }

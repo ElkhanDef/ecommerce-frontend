@@ -77,12 +77,15 @@ export default async function CategoryPage({
 
   return (
     <section aria-labelledby="category-heading">
-      <h1
-        id="category-heading"
-        className="font-serif text-[24px] font-semibold text-gray-800 mb-6"
-      >
-        {category.name}
-      </h1>
+      <div className="flex items-center gap-3 mb-6">
+        <span className="w-8 h-[3px] rounded-full bg-gradient-to-r from-gold-dark to-gold-light" aria-hidden="true" />
+        <h1
+          id="category-heading"
+          className="font-serif text-[24px] font-semibold text-gray-800"
+        >
+          {category.name}
+        </h1>
+      </div>
 
       {productPage ? (
         <>
@@ -94,9 +97,12 @@ export default async function CategoryPage({
           />
         </>
       ) : (
-        <p className="py-16 text-center text-[15px] text-gray-500">
-          Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
-        </p>
+        <div className="py-16 text-center">
+          <p aria-hidden="true" className="text-5xl mb-4">⚠️</p>
+          <p className="text-[15px] text-gray-500">
+            Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
+          </p>
+        </div>
       )}
     </section>
   );

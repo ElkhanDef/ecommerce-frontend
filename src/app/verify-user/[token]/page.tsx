@@ -19,7 +19,7 @@ export default async function VerifyUserPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-surface">
-      <div className="w-full max-w-[440px] bg-white border border-[#e0e0e0] rounded-[20px] p-10">
+      <div className="w-full max-w-[440px] bg-white border border-[#e0e0e0] rounded-[20px] p-10 shadow-lg">
         <VerifyAccount token={token} />
       </div>
     </div>

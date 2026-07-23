@@ -41,7 +41,7 @@ export default async function ResetPasswordPage({
         </p>
         <Link
           href="/sifremi-unuttum"
-          className="inline-block w-full p-3.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[15px] font-medium text-center transition-colors"
+          className="inline-block w-full p-3.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[15px] font-medium text-center shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
         >
           Yeni Bağlantı İste
         </Link>

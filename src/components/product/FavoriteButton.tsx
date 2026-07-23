@@ -73,7 +73,7 @@ export default function FavoriteButton({
         onClick={handleClick}
         disabled={pending}
         aria-pressed={isFavorite}
-        className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border text-[14px] font-medium transition-colors disabled:opacity-60 ${
+        className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border text-[14px] font-medium transition-all active:scale-[0.98] disabled:opacity-60 ${
           isFavorite
             ? "border-gold bg-gold/10 text-gold-dark"
             : "border-gray-300 text-gray-600 hover:border-gold hover:text-gold-dark"
@@ -93,7 +93,7 @@ export default function FavoriteButton({
       aria-pressed={isFavorite}
       aria-label={label}
       title={label}
-      className={`absolute top-2.5 right-2.5 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 border border-black/5 shadow-sm transition-colors disabled:opacity-60 ${
+      className={`absolute top-2.5 right-2.5 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 border border-black/5 shadow-sm transition-all hover:scale-110 active:scale-95 disabled:opacity-60 ${
         isFavorite ? "text-gold-dark" : "text-gray-500 hover:text-gold-dark"
       }`}
     >

@@ -16,11 +16,11 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "E-Commerce — Kaliteli Hediyelikler",
-    template: "%s | E-Commerce",
+    default: "Kütahya Çini Evi — El Yapımı Kütahya Çinileri",
+    template: "%s | Kütahya Çini Evi",
   },
   description:
-    "El yapımı porselen ve cam ürünler, özel tasarım hediyelikler. Türkiye'nin en güzel el sanatları burada.",
+    "El yapımı Kütahya çinileri ve özel tasarım seramik hediyelikler. Yüzyıllardır süregelen çini sanatının inceliği artık kapınızda.",
 };
 
 export default function RootLayout({

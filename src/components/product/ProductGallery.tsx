@@ -27,14 +27,14 @@ export default function ProductGallery({
         aria-hidden="true"
         className="flex items-center justify-center aspect-square rounded-[16px] bg-gradient-to-br from-gold-light/30 to-gold/20 text-6xl"
       >
-        🛍
+        🏺
       </div>
     );
   }
 
   return (
     <div>
-      <div className="relative aspect-square rounded-[16px] overflow-hidden bg-surface border border-[#e0e0e0]">
+      <div className="relative aspect-square rounded-[16px] overflow-hidden bg-surface border border-[#e0e0e0] shadow-sm">
         <Image
           src={active.url}
           alt={productName}
@@ -54,7 +54,7 @@ export default function ProductGallery({
               onClick={() => setActiveIndex(index)}
               aria-label={`${productName} — görsel ${index + 1}`}
               aria-current={index === activeIndex}
-              className={`relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-surface border-2 transition-colors ${
+              className={`relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-surface border-2 transition-all hover:scale-105 ${
                 index === activeIndex
                   ? "border-gold"
                   : "border-transparent hover:border-gold-light"

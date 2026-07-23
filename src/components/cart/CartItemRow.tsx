@@ -55,7 +55,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
               aria-hidden="true"
               className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gold-light/30 to-gold/20 text-2xl"
             >
-              🛍
+              🏺
             </div>
           )}
         </div>

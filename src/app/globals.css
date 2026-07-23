@@ -18,3 +18,80 @@ body {
   color: #333;
   font-family: var(--font-sans);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--color-gold-light);
+  color: var(--color-gold-ink);
+}
+
+/* Thin gold scrollbar, used app-wide for a more premium feel */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gold-light) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-gold-light);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gold);
+}
+
+/* Native <dialog> open/close polish (ConfirmDialog) */
+dialog::backdrop {
+  animation: fade-in 0.18s ease-out;
+}
+
+dialog[open] {
+  animation: dialog-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  dialog::backdrop,
+  dialog[open],
+  .animate-fade-in-up {
+    animation: none;
+  }
+}

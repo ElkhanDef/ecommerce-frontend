@@ -2,7 +2,7 @@
 
 # Project Context
 
-Customer-facing e-commerce storefront (NOT an admin panel — the admin panel will be a separate project). Consumes a Java Spring Boot backend REST API with JWT authentication.
+Customer-facing e-commerce storefront **plus** the admin panel — both live in this one Next.js app now (decision changed 2026-07-22; originally the admin panel was planned as a separate project). Consumes a Java Spring Boot backend REST API with JWT authentication. Admin-only pages live under `/admin` and are gated by an `ADMIN` role returned by the backend; everything else in the app remains the public/customer storefront described below.
 
 # Role & Working Style
 
@@ -28,6 +28,7 @@ Act as a senior frontend developer (10+ yrs, Next.js/React/TypeScript/Tailwind).
 - **Google login:** NOT implemented for now (no backend support yet) — do not render the button.
 - TypeScript interfaces for ALL backend DTOs (in `src/types/`).
 - Backend API contract comes from the user's Postman collection — ask for it if endpoint details are unknown; do not invent endpoints.
+- **Admin panel (added 2026-07-22):** lives in this same app under `/admin`, gated by a `role` field the backend returns on sign-in/`GET /users/me` (`ADMIN` vs the regular customer role — exact field/values TBD, backend change in progress). The frontend guard is UX only; the backend MUST also enforce role checks on every `/**/management/**` endpoint server-side (e.g. `@PreAuthorize`) — never treat a client-side redirect as the security boundary. Admin wires up the existing backend `/management` endpoints (products, categories, users) that were already implemented but previously unused by any frontend.
 
 # Design System — "Gold Premium"
 
@@ -39,11 +40,11 @@ Luxury boutique feel: warm, inviting, elegant, minimal. Mobile-first responsive.
 
 # Rules
 
-1. **Language policy:** ALL code is English — file/folder names, component/function/variable/type names, comments. ONLY customer-facing output is Turkish: UI texts, error/validation messages, metadata (title/description), and URLs (route segment folders like `giris/`, `sepet/` are Turkish because they ARE the URL — this is the one exception to English folder names)
+1. **Language policy:** ALL code is English — file/folder names, component/function/variable/type names, comments. ONLY customer-facing output is Turkish: UI texts, error/validation messages, metadata (title/description), and URLs (route segment folders like `giris/`, `sepet/` are Turkish because they ARE the URL — this is the one exception to English folder names). **Admin routes are the exception to the exception:** `/admin/**` is internal/staff-only, not customer-facing or SEO-relevant, so its URL segments stay English (e.g. `/admin/products`, not `/admin/urunler`) — though on-screen admin UI text still follows normal Turkish UI-text conventions.
 2. Every component follows single-responsibility
 3. Apply lazy loading & code splitting where it pays off
-4. SEO meta tags (Metadata API) on every page
-5. Cart & Favorites pages require auth; product pages are public
+4. SEO meta tags (Metadata API) on every page; `/admin/**` pages instead set `robots: { index: false }`
+5. Cart & Favorites pages require auth; product pages are public; `/admin/**` requires the `ADMIN` role (not just being logged in)
 6. Tech stack changes must also be recorded in `docs/DEVELOPMENT.md`
 
 # Page Roadmap (build in this order)
@@ -60,7 +61,8 @@ Luxury boutique feel: warm, inviting, elegant, minimal. Mobile-first responsive.
 - Path alias: `@/*` → `./src/*`
 - Shared types live in `src/types/`
 - **Turkish URLs:** `/giris`, `/kayit`, `/urun/[slug]`, `/sepet`, `/favoriler`, `/profil`
-- Route groups: `(auth)` = no header/footer, gold brand panel layout; `(shop)` = Header + Footer
+- **Admin URLs (English, staff-only):** `/admin`, `/admin/products`, `/admin/categories`, `/admin/users`
+- Route groups: `(auth)` = no header/footer, gold brand panel layout; `(shop)` = Header + Footer; `(admin)` = admin shell (own layout, `ADMIN`-role guard), not the storefront Header/Footer
 - Auth is two separate routes (`/giris`, `/kayit`) sharing `(auth)/layout.tsx`; tabs are Links (`components/auth/AuthTabs.tsx`)
 - Design tokens are Tailwind 4 `@theme` vars in `globals.css`: use `gold`, `gold-dark`, `gold-light`, `gold-ink`, `surface` utility colors and `font-serif` (Playfair) / `font-sans` (DM Sans) — do NOT hardcode hex values in components
 - Current folder layout is documented in `docs/DEVELOPMENT.md` — keep it in sync

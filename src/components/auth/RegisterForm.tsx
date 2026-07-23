@@ -59,7 +59,7 @@ export default function RegisterForm() {
         </p>
         <Link
           href="/giris"
-          className="inline-block px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+          className="inline-block px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
         >
           Giriş sayfasına dön
         </Link>
@@ -135,7 +135,7 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full p-3.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[15px] font-medium transition-colors mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full p-3.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[15px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98] mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
       >
         {submitting ? "Kayıt yapılıyor..." : "Kayıt Ol"}
       </button>

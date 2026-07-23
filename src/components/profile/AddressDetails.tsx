@@ -93,9 +93,10 @@ export default function AddressDetails() {
 
   if (status === "loading") {
     return (
-      <p role="status" className="py-12 text-center text-[14px] text-gray-500">
+      <div role="status" className="py-16 flex flex-col items-center gap-3 text-[14px] text-gray-500">
+        <span className="w-6 h-6 rounded-full border-2 border-gold-light border-t-gold-dark animate-spin" aria-hidden="true" />
         Adres bilgileriniz yükleniyor...
-      </p>
+      </div>
     );
   }
 
@@ -117,7 +118,7 @@ export default function AddressDetails() {
             {error}
           </div>
         )}
-        <div className="bg-white border border-[#e0e0e0] rounded-[16px] p-6 mb-6">
+        <div className="bg-white border border-[#e0e0e0] rounded-[16px] p-6 mb-6 shadow-sm">
           <dl className="space-y-4">
             {fields.map((field) => (
               <div key={field.label} className="flex justify-between gap-4">
@@ -135,7 +136,7 @@ export default function AddressDetails() {
           <button
             type="button"
             onClick={() => setStatus("form")}
-            className="px-5 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-colors"
+            className="px-5 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]"
           >
             Düzenle
           </button>
@@ -143,7 +144,7 @@ export default function AddressDetails() {
             type="button"
             onClick={() => setConfirmDelete(true)}
             disabled={deleting}
-            className="px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {deleting ? "Siliniyor..." : "Sil"}
           </button>
@@ -229,7 +230,7 @@ export default function AddressDetails() {
         <button
           type="submit"
           disabled={submitting}
-          className="px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? "Kaydediliyor..." : address ? "Kaydet" : "Adres Ekle"}
         </button>
@@ -241,7 +242,7 @@ export default function AddressDetails() {
               setFieldErrors({});
               setStatus("view");
             }}
-            className="px-6 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-colors"
+            className="px-6 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]"
           >
             Vazgeç
           </button>

@@ -7,7 +7,7 @@ import type { Page, ProductSummary } from "@/types";
 export const metadata: Metadata = {
   title: "Yeni Gelenler",
   description:
-    "Mağazamıza yeni eklenen el yapımı porselen, cam ürünler ve hediyelikleri keşfedin.",
+    "Mağazamıza yeni eklenen el yapımı Kütahya çinileri ve seramik hediyelikleri keşfedin.",
 };
 
 const PAGE_SIZE = 12;
@@ -34,12 +34,15 @@ export default async function NewArrivalsPage({
 
   return (
     <section aria-labelledby="new-arrivals-heading">
-      <h1
-        id="new-arrivals-heading"
-        className="font-serif text-[24px] font-semibold text-gray-800 mb-2"
-      >
-        Yeni Gelenler
-      </h1>
+      <div className="flex items-center gap-3 mb-2">
+        <span className="w-8 h-[3px] rounded-full bg-gradient-to-r from-gold-dark to-gold-light" aria-hidden="true" />
+        <h1
+          id="new-arrivals-heading"
+          className="font-serif text-[24px] font-semibold text-gray-800"
+        >
+          Yeni Gelenler
+        </h1>
+      </div>
       <p className="text-[15px] text-gray-500 mb-6">
         Mağazamıza en son eklenen ürünler.
       </p>
@@ -54,9 +57,12 @@ export default async function NewArrivalsPage({
           />
         </>
       ) : (
-        <p className="py-16 text-center text-[15px] text-gray-500">
-          Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
-        </p>
+        <div className="py-16 text-center">
+          <p aria-hidden="true" className="text-5xl mb-4">⚠️</p>
+          <p className="text-[15px] text-gray-500">
+            Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
+          </p>
+        </div>
       )}
     </section>
   );

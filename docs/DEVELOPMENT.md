@@ -4,7 +4,7 @@ Bu doküman projenin mevcut tech stack'ini ve geliştirme bilgilerini içerir. P
 
 ## Proje Hakkında
 
-Müşteriye yönelik e-ticaret sitesi (storefront). Admin paneli **değildir** — admin paneli ayrı bir proje olarak geliştirilecek.
+Müşteriye yönelik e-ticaret sitesi (storefront) **ve** admin paneli — ikisi de bu tek Next.js projesinde yaşıyor (karar değişikliği: 2026-07-22, önceden admin paneli ayrı proje olarak planlanmıştı). Admin sayfaları `/admin` altında, backend'den dönecek `ADMIN` rolüyle korunacak; storefront tarafı aşağıda anlatıldığı gibi değişmeden devam ediyor.
 
 Backend: Java Spring Boot ile yazılmış ayrı bir REST API projesi. Bu proje sadece frontend'dir ve backend API'yi tüketir.
 
@@ -44,14 +44,21 @@ src/
       sepet/            # /sepet (giriş gerektirir)
       favoriler/        # /favoriler (giriş gerektirir)
       profil/           # /profil (giriş gerektirir)
+    admin/              # /admin — ADMIN rolü gerektirir (route group değil, düz klasör: kendi shell'i + storefront Header/Footer'ı yok)
+      layout.tsx        # AdminGuard (rol kontrolü) + AdminShell (üst nav) sarmalayıcı
+      page.tsx          # /admin (panel ana sayfası)
+      products/         # /admin/products (liste + oluştur + sil), /admin/products/[id] (detay: görseller, sil)
+      categories/        # /admin/categories (liste + oluştur + düzenle + sil)
+      users/            # /admin/users (id ile tek kullanıcı sorgulama — backend'de liste endpoint'i yok)
   components/
-    ui/                 # Genel parçalar (Button, Input...) — henüz boş
-    layout/             # Header, Footer
+    ui/                 # Genel parçalar (TextField, TextAreaField, ConfirmDialog, Pagination)
+    layout/             # Header, Footer, BrandMark (marka logosu — lale motifi, SVG)
+    admin/              # AdminGuard, AdminShell, CategoryManager, ProductManager, ProductDetailManager, UserLookup
     auth/               # AuthTabs (form komponentleri gelecek)
     product/            # ProductCard, ProductGrid, ProductGallery, FavoriteButton, AddToCartButton
     favorites/          # FavoritesList (auth guard + favori grid'i)
     cart/               # CartView (auth guard + özet), CartItemRow (adet/sil)
-  services/             # api.ts, auth.ts, users.ts, products.ts, favorites.ts, cart.ts, addresses.ts, token-storage.ts
+  services/             # api.ts, auth.ts, users.ts, products.ts, categories.ts, favorites.ts, cart.ts, addresses.ts, token-storage.ts
   stores/               # Zustand store'ları: favorites.ts, cart.ts
   types/                # Paylaşılan TypeScript tipleri / DTO'lar
   lib/                  # Yardımcı fonksiyonlar — henüz boş
@@ -60,6 +67,7 @@ docs/                   # Proje dokümantasyonu + tasarım referansı
 
 - Path alias: `@/*` → `./src/*`
 - URL'ler Türkçe: `/giris`, `/kayit`, `/urun/[slug]`, `/sepet`, `/favoriler`, `/profil`
+- Admin URL'leri İngilizce (staff-only, SEO dışı): `/admin`, `/admin/products`, `/admin/categories`, `/admin/users`
 
 ## Komutlar
 
@@ -101,6 +109,13 @@ docs/                   # Proje dokümantasyonu + tasarım referansı
 - `GET /addresses` → 200 `{id, city, district, fullAddress, postalCode}` (Bearer gerekli) — **kullanıcı başına tek adres**, `{id}` path parametresi YOK. Adres yoksa hata döner (spec'te belgelenmemiş; frontend her hatayı "adres yok" kabul edip ekleme formunu gösterir).
 - `POST /addresses` / `PUT /addresses` → body `AddressRequestDto {city, district, fullAddress (max 500), postalCode (tam 5 karakter)}`, hepsi zorunlu, 200 `AddressResponseDto` döner.
 - `DELETE /addresses` → 200, gövdesiz.
+- **2026-07-23 itibarıyla `role` alanı eklendi:** `POST /auth/sign-up`, `POST /auth/sign-in` ve `GET /users/me` yanıtlarına `role` (string) eklendi — `"ADMIN"` değeri `/admin` erişimini açıyor, normal müşteri değeri henüz doğrulanmadı (karşılaştırma sadece `=== "ADMIN"` ile yapılıyor). `GET /users/me` artık `GET /users/management/{id}` ile birebir aynı şekli (`UserResponseDto`) dönüyor.
+- `POST /categories/management` / `PUT /categories/management/{id}` → body `CategoryRequestDto {name}`, 200/201 `CategoryResponseDto {id, name, slug}` döner. `GET /categories/management/{id}`, `DELETE /categories/management/{id}` de var. `id` 2026-07-23'te backend'e eklendi (public `GET /categories` dahil her yerde artık dönüyor) — canlı backend'e karşı uçtan uca doğrulandı: kategori oluştur → id ile oku → güncelle → o id'yle ürün oluştur → temizlik (sil) tam çalışıyor. `CategoryManager`/`ProductManager`'daki geçici "id yok" devre dışı bırakma/uyarı kodları kaldırıldı.
+- `POST /products/management` → body `ProductRequestDto {name, price, stock, sku, description, categoryId}`, 200 `ProductResponseDto` (= `ProductDetail` ile aynı şekil) döner. `GET /products/management/{productId}`, `DELETE /products/management/{id}` de var. **DİKKAT:** ürünün alanlarını güncelleyen bir PUT/PATCH endpoint'i yok — sadece oluştur/oku/sil var, bu yüzden admin panelinde "ürün düzenle" formu yok (salt-okunur detay + görsel yönetimi + silme).
+- `POST /products/management/{productId}/images` → `multipart/form-data`, alan adı `files` (çoklu dosya), 200 `PartialImageUploadResponseDto {productId, uploaded[], failed[], totalUploaded, totalFailed}` — kısmi başarısızlıkta hata fırlatmıyor, dosya bazlı sonuç dönüyor.
+- `PATCH /products/management/{productId}/images/{imageId}/main` → gövdesiz, 200 güncel `ProductResponseDto` döner (ana görseli değiştirir).
+- `GET /users/management/{id}` → 200 `UserResponseDto {id, name, lastName, email, phoneNumber, role, active, verified}`. **DİKKAT:** kullanıcı listeleme endpoint'i yok — sadece id ile tekil sorgu var, bu yüzden admin panelinde "kullanıcılar" sayfası liste değil, id ile arama formu.
+- Tüm `/management/**` endpoint'leri canlı OpenAPI'de (`/v3/api-docs`) herhangi bir `security` bilgisi taşımıyor (diğer, bilinen şekilde korumalı endpoint'ler de aynı şekilde boş dönüyor — springdoc güvenlik şemasını export etmiyor, bu normal). Frontend'deki `/admin` guard'ı (`components/admin/AdminGuard.tsx`) sadece UX'tir; backend'in `/management/**`'i sunucu tarafında (`@PreAuthorize` vb.) kilitlemesi hâlâ gerekiyor.
 
 ## Mimari Kararlar
 
@@ -126,6 +141,10 @@ Lüks butik hissiyatı; sıcak, zarif, sade. Mobil öncelikli. Referans mockup: 
 
 ## Changelog
 
+- **2026-07-23** — Backend `CategoryResponseDto`'ya `id` ekledi; canlı API'ye karşı uçtan uca test edildi (kategori oluştur/oku/güncelle, o id ile ürün oluştur, temizlik) — hepsi çalışıyor. `Category` tipindeki ve `CategoryManager`/`ProductManager`'daki "id henüz yok" TODO'ları/devre dışı bırakmalar kaldırıldı; kategori düzenleme/silme ve ürün oluşturma artık tam işlevsel.
+- **2026-07-23** — Admin paneli bağlandı (`/admin`, `role === "ADMIN"` guard'lı — bkz. `components/admin/AdminGuard.tsx`, gerçek güvenlik sınırı değil): `/admin/products` (liste + oluştur + sil), `/admin/products/[id]` (salt-okunur detay + görsel yükleme/ana görsel seçme + sil), `/admin/categories` (liste + oluştur + düzenle + sil), `/admin/users` (id ile tekil sorgu). Backend'in `role` alanı eklemesiyle rol kontrolü artık gerçek veriye dayanıyor (`services/users.ts`, `services/products.ts`, `services/categories.ts` yönetim fonksiyonlarıyla genişletildi). Bilinen backend eksikleri (API sözleşmesi bölümüne detaylı not düşüldü): kategori `id`'si hiçbir response'da yok (kategori düzenle/sil ve ürün oluşturma bunu bekliyor — backend fix'i bekleniyor), ürün güncelleme endpoint'i yok, kullanıcı listeleme endpoint'i yok.
+- **2026-07-23** — Site markalaşması: isim "Kütahya Çini Evi" oldu, logo `components/layout/BrandMark.tsx` (lale motifli SVG, gold/glass varyantlı) ile değiştirildi; ilgili metinler (hero, auth paneli, metadata) Kütahya çinisi temasına güncellendi.
+- **2026-07-22** — Mimari karar değişikliği: admin paneli ayrı proje değil, bu app içinde `/admin` altında geliştirilecek. Backend'de `/products/management`, `/categories/management`, `/users/management/{id}` endpoint'leri zaten mevcut (canlı OpenAPI ile doğrulandı) ama hiçbir DTO'da `role` alanı yok ve `/management/**` için belgelenmiş bir security kısıtı görünmüyor — backend'in User'a `Role` (ADMIN/CUSTOMER) eklemesi, bunu sign-in/`/users/me` yanıtına dahil etmesi ve `/management/**`'i sunucu tarafında (`@PreAuthorize` vb.) kilitlemesi bekleniyor. Bu tamamlanana kadar frontend'deki admin route guard'ı sadece UX'tir, gerçek güvenlik sınırı değildir.
 - **2026-07-22** — Adres yönetimi bağlandı: backend'de kullanıcı başına tek adres modeli (`GET/POST/PUT/DELETE /addresses`, id parametresiz, OpenAPI `/v3/api-docs` ile doğrulandı). `services/addresses.ts`, `Address`/`AddressRequest` tipleri, `components/profile/AddressDetails.tsx` (görüntüle/düzenle/sil + boş durumda ekleme formu, `window.confirm`'lü silme) ve genel amaçlı `ui/TextAreaField.tsx` eklendi. `/profil` sayfası iki sütuna bölündü: solda hesap bilgileri, sağda adresim.
 - **2026-07-20** — Kategoriler dinamik bağlandı: header menüsü `GET /categories`'ten render ediliyor (satıcı ne eklerse otomatik görünür, slug'sız eski kayıtlar atlanır, backend'e ulaşılamazsa menü yerleşik linklere düşer), `/kategori/[slug]` sayfası (`GET /categories/{slug}` ile başlık + 404, `GET /products?categorySlug=` ile grid + sayfalama), `services/categories.ts`, `ProductCategory` tipi `Category` olarak genelleştirildi, `ProductSummary`'ye opsiyonel `categorySlug` eklendi. Bilinen eksik: backend `categorySlug` filtresini henüz uygulamıyor.
 - **2026-07-19** — Backend `thumbnailPath`'i tam URL (yoksa null) dönecek şekilde düzeltildi → galeri şeridindeki küçük görseller artık `thumbnailPath ?? url` ile çiziliyor.

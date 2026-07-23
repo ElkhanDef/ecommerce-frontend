@@ -44,7 +44,7 @@ export default function ConfirmDialog({
         event.preventDefault();
         onCancel();
       }}
-      className="m-auto rounded-[20px] border border-[#e0e0e0] p-0 [&::backdrop]:bg-black/40"
+      className="m-auto rounded-[20px] border border-[#e0e0e0] p-0 shadow-xl [&::backdrop]:bg-black/40"
     >
       <div className="w-[min(90vw,380px)] p-6">
         <h2 className="font-serif text-lg font-semibold text-gray-800 mb-2">
@@ -55,14 +55,14 @@ export default function ConfirmDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-colors"
+            className="px-5 py-2.5 border border-gray-300 hover:bg-gray-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className={`px-5 py-2.5 rounded-xl text-[14px] font-medium transition-colors ${
+            className={`px-5 py-2.5 rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98] ${
               destructive
                 ? "bg-red-600 hover:bg-red-700 text-white"
                 : "bg-gold hover:bg-gold-dark text-gold-ink hover:text-white"

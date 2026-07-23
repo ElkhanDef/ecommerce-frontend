@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCategories } from "@/services/categories";
 import type { Category } from "@/types";
+import BrandMark from "./BrandMark";
 import HeaderAuthAction from "./HeaderAuthAction";
 import HeaderCartLink from "./HeaderCartLink";
 
@@ -14,16 +15,14 @@ export default async function Header() {
     // Backend unreachable — the menu falls back to the built-in links only.
   }
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#e0e0e0]">
+    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#e0e0e0] shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between gap-4 h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <span className="w-9 h-9 bg-gradient-to-br from-gold-dark to-gold-light rounded-xl flex items-center justify-center text-[18px]">
-              🛍
-            </span>
-            <span className="font-serif text-[20px] font-bold text-gray-800">
-              E-Commerce
+          <Link href="/" className="group flex items-center gap-2.5 shrink-0">
+            <BrandMark className="w-9 h-9 rounded-xl transition-transform group-hover:scale-105" />
+            <span className="font-serif text-[20px] font-bold text-gray-800 whitespace-nowrap">
+              Kütahya Çini Evi
             </span>
           </Link>
 

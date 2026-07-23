@@ -20,7 +20,7 @@ export default function AuthTabs() {
           aria-current={pathname === tab.href ? "page" : undefined}
           className={`flex-1 p-2.5 text-center text-sm font-medium rounded-lg transition-all ${
             pathname === tab.href
-              ? "bg-gold text-gold-ink"
+              ? "bg-gold text-gold-ink shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >

@@ -37,6 +37,8 @@ export interface UserResponse {
   lastName: string;
   email: string;
   phoneNumber: string | null;
+  /** "ADMIN" grants access to /admin; the regular customer value is otherwise untyped. */
+  role: string;
 }
 
 /** Response of POST /auth/sign-in (200). */
@@ -54,7 +56,7 @@ export interface RefreshResponse {
   expiresIn: number;
 }
 
-/** Response of GET /users/me (200). */
+/** Response of GET /users/me (200) — same shape as GET /users/management/{id}. */
 export interface CurrentUser extends UserResponse {
   active: boolean;
   verified: boolean;
@@ -74,9 +76,15 @@ export interface ProductSummary {
 
 /** Item of GET /categories and GET /categories/{slug}; also embedded in product detail. */
 export interface Category {
+  id: number;
   name: string;
   /** Null on legacy records — they cannot have a category page. */
   slug: string | null;
+}
+
+/** Body of POST /categories/management and PUT /categories/management/{id}. */
+export interface CategoryRequest {
+  name: string;
 }
 
 /** Image embedded in GET /products/{slug}. */
@@ -92,7 +100,11 @@ export interface ProductImage {
   updatedAt: string;
 }
 
-/** Response of GET /products/{slug} (200). Unknown slug -> 404 "Ürün bulunamadı". */
+/**
+ * Response of GET /products/{slug} (200). Unknown slug -> 404 "Ürün bulunamadı".
+ * Same shape as POST /products/management, GET /products/management/{productId}
+ * and PATCH .../images/{imageId}/main.
+ */
 export interface ProductDetail {
   id: number;
   name: string;
@@ -103,6 +115,40 @@ export interface ProductDetail {
   slug: string;
   categoryResponse: Category;
   imagesResponse: ProductImage[];
+}
+
+/** Body of POST /products/management. There is no update endpoint yet. */
+export interface ProductRequest {
+  name: string;
+  price: number;
+  stock: number;
+  sku: string;
+  description?: string;
+  categoryId: number;
+}
+
+/** Item of POST /products/management/{productId}/images successes. */
+export interface UploadedImage {
+  id: number;
+  url: string;
+  fileName: string;
+  main: boolean;
+}
+
+/** Item of POST /products/management/{productId}/images failures. */
+export interface FailedImage {
+  filename: string;
+  error: string;
+  errorCode: string;
+}
+
+/** Response of POST /products/management/{productId}/images (200) — per-file results. */
+export interface ImageUploadResult {
+  productId: number;
+  uploaded: UploadedImage[];
+  failed: FailedImage[];
+  totalUploaded: number;
+  totalFailed: number;
 }
 
 /** Item of the cart envelope. NO slug — cart rows cannot link to detail pages. */

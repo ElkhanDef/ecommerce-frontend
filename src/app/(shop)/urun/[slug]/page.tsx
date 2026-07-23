@@ -80,9 +80,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
   if (result.kind === "error") {
     return (
-      <p className="py-16 text-center text-[15px] text-gray-500">
-        Ürün şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
-      </p>
+      <div className="py-16 text-center">
+        <p aria-hidden="true" className="text-5xl mb-4">⚠️</p>
+        <p className="text-[15px] text-gray-500">
+          Ürün şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
+        </p>
+      </div>
     );
   }
 
@@ -101,7 +104,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   };
 
   return (
-    <article className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+    <article className="animate-fade-in-up grid gap-8 lg:grid-cols-2 lg:gap-12">
       <ProductGallery
         images={product.imagesResponse}
         productName={product.name}

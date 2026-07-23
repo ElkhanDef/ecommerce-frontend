@@ -56,9 +56,10 @@ export default function ProfileDetails() {
 
   if (!user) {
     return (
-      <p role="status" className="py-12 text-center text-[14px] text-gray-500">
+      <div role="status" className="py-16 flex flex-col items-center gap-3 text-[14px] text-gray-500">
+        <span className="w-6 h-6 rounded-full border-2 border-gold-light border-t-gold-dark animate-spin" aria-hidden="true" />
         Bilgileriniz yükleniyor...
-      </p>
+      </div>
     );
   }
 
@@ -71,10 +72,13 @@ export default function ProfileDetails() {
 
   return (
     <div>
-      <div className="bg-white border border-[#e0e0e0] rounded-[16px] p-6 mb-6">
+      <div className="bg-white border border-[#e0e0e0] rounded-[16px] p-6 mb-6 shadow-sm">
         <dl className="space-y-4">
           {fields.map((field) => (
-            <div key={field.label} className="flex justify-between gap-4">
+            <div
+              key={field.label}
+              className="flex justify-between gap-4 py-1 border-b border-[#f0f0f0]"
+            >
               <dt className="text-[13px] font-medium text-gray-500">
                 {field.label}
               </dt>
@@ -99,7 +103,7 @@ export default function ProfileDetails() {
       <button
         type="button"
         onClick={() => setConfirmSignOut(true)}
-        className="px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-colors"
+        className="px-5 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-[14px] font-medium transition-all active:scale-[0.98]"
       >
         Çıkış Yap
       </button>

@@ -31,7 +31,7 @@ export default function HeaderAuthAction() {
     return (
       <Link
         href="/giris"
-        className="ml-1 px-4 py-2 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors whitespace-nowrap"
+        className="ml-1 px-4 py-2 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98] whitespace-nowrap"
       >
         Giriş Yap
       </Link>

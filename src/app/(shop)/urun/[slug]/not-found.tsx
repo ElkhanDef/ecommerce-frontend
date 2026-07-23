@@ -14,7 +14,7 @@ export default function ProductNotFound() {
       </p>
       <Link
         href="/"
-        className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+        className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
       >
         Ürünleri Keşfet
       </Link>

@@ -34,12 +34,15 @@ export default async function HomePage({
         aria-labelledby="products-heading"
         className="scroll-mt-32"
       >
-        <h2
-          id="products-heading"
-          className="font-serif text-[24px] font-semibold text-gray-800 mb-6"
-        >
-          Ürünler
-        </h2>
+        <div className="flex items-center gap-3 mb-6">
+          <span className="w-8 h-[3px] rounded-full bg-gradient-to-r from-gold-dark to-gold-light" aria-hidden="true" />
+          <h2
+            id="products-heading"
+            className="font-serif text-[24px] font-semibold text-gray-800"
+          >
+            Ürünler
+          </h2>
+        </div>
 
         {productPage ? (
           <>
@@ -50,9 +53,12 @@ export default async function HomePage({
             />
           </>
         ) : (
-          <p className="py-16 text-center text-[15px] text-gray-500">
-            Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
-          </p>
+          <div className="py-16 text-center">
+            <p aria-hidden="true" className="text-5xl mb-4">⚠️</p>
+            <p className="text-[15px] text-gray-500">
+              Ürünler şu anda yüklenemiyor. Lütfen daha sonra tekrar deneyin.
+            </p>
+          </div>
         )}
       </section>
     </>

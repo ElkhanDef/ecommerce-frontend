@@ -1,15 +1,15 @@
 import Link from "next/link";
+import BrandMark from "./BrandMark";
 
 export default function Footer() {
   return (
     <footer className="mt-auto bg-white border-t border-[#e0e0e0]">
+      <div className="h-[3px] bg-gradient-to-r from-gold-dark via-gold to-gold-light" />
       <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <span className="w-8 h-8 bg-gradient-to-br from-gold-dark to-gold-light rounded-lg flex items-center justify-center text-[15px]">
-            🛍
-          </span>
+          <BrandMark className="w-8 h-8 rounded-lg" />
           <span className="font-serif text-[17px] font-bold text-gray-800">
-            E-Commerce
+            Kütahya Çini Evi
           </span>
         </div>
 
@@ -29,7 +29,7 @@ export default function Footer() {
         </nav>
 
         <p className="text-[13px] text-gray-400">
-          © {new Date().getFullYear()} E-Commerce. Tüm hakları saklıdır.
+          © {new Date().getFullYear()} Kütahya Çini Evi. Tüm hakları saklıdır.
         </p>
       </div>
     </footer>

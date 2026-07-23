@@ -41,21 +41,23 @@ export default function FavoritesList() {
 
   if (items === null) {
     return (
-      <p role="status" className="py-12 text-center text-[14px] text-gray-500">
+      <div role="status" className="py-16 flex flex-col items-center gap-3 text-[14px] text-gray-500">
+        <span className="w-6 h-6 rounded-full border-2 border-gold-light border-t-gold-dark animate-spin" aria-hidden="true" />
         Favorileriniz yükleniyor...
-      </p>
+      </div>
     );
   }
 
   if (items.length === 0) {
     return (
       <div className="py-12 text-center">
+        <p aria-hidden="true" className="text-5xl mb-4">♡</p>
         <p className="text-[15px] text-gray-500 mb-4">
           Henüz favori ürününüz yok.
         </p>
         <Link
           href="/"
-          className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium transition-colors"
+          className="inline-block px-5 py-2.5 bg-gold hover:bg-gold-dark text-gold-ink hover:text-white rounded-xl text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
         >
           Ürünleri Keşfet
         </Link>

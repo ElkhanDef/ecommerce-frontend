@@ -40,9 +40,9 @@ export default function AddToCartButton({
     setError(null);
     try {
       await useCartStore.getState().add(productId, quantity);
-      setFeedback(
-        useCartStore.getState().cart?.message ?? "Ürün sepete eklendi.",
-      );
+      // The backend's cart.message isn't guaranteed to be Turkish (or present) —
+      // own the success copy here instead of surfacing it directly.
+      setFeedback("Ürün sepete eklendi.");
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         router.push(loginUrl);
@@ -108,7 +108,7 @@ export default function AddToCartButton({
           type="button"
           onClick={handleAdd}
           disabled={pending}
-          className="px-6 py-2.5 rounded-xl bg-gold hover:bg-gold-dark text-gold-ink hover:text-white text-[14px] font-medium transition-colors disabled:opacity-60"
+          className="px-6 py-2.5 rounded-xl bg-gold hover:bg-gold-dark text-gold-ink hover:text-white text-[14px] font-medium shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:opacity-60 disabled:hover:shadow-sm disabled:active:scale-100"
         >
           {pending ? "Ekleniyor..." : "Sepete Ekle"}
         </button>
